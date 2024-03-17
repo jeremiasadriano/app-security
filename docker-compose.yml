@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  person-db:
+    container_name: 'Person-postgres-db'
+    image: postgres:16.0
+    restart: on-failure
+    environment:
+      POSTGRES_USER: person
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: person-security-db
+    ports:
+      - '1111:5432'
+    volumes:
+      - person-security:/var/lib/postgresql/data
+volumes:
+  person-security:
+    name: 'person-security'

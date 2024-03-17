@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: 'app_security'
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:1111/person-security-db
+    username: person
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
