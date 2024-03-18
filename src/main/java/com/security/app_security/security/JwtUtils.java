@@ -31,6 +31,7 @@ public class JwtUtils {
                 .compact();
     }
 
+    //    Responsible for bring all claims(issued, expirations, subject,ext)
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key())
@@ -39,6 +40,7 @@ public class JwtUtils {
                 .getPayload();
     }
 
+    //    Responsible for bring  one of the claims
     public <T> T extractClaim(String token, Function<Claims, T> converter) {
         return converter.apply(extractAllClaims(token));
     }
