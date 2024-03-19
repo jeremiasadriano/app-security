@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.hibernate.annotations.Columns;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,6 +34,8 @@ public class Person implements UserDetails {
     @Size(min = 8, max = 16)
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private Roles roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

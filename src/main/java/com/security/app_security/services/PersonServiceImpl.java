@@ -1,6 +1,7 @@
 package com.security.app_security.services;
 
 import com.security.app_security.models.Person;
+import com.security.app_security.models.Roles;
 import com.security.app_security.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ public class PersonServiceImpl implements PersonService {
         Optional<Person> model = this.personRepository.findPersonByEmail(person.getEmail());
         if (model.isPresent()) throw new IndexOutOfBoundsException();
         person.setPassword(this.passwordEncoder.encode(person.getPassword()));
+        person.setRoles(Roles.USER);
         return this.personRepository.save(person);
     }
 
