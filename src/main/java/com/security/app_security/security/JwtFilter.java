@@ -27,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization").substring(7);
         if (token.isEmpty()) {
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); //Tells the spring security to proceed to the others filters even the conditions false.
             return;
         }
         String username = this.jwtService.extractUsername(token);
@@ -35,10 +35,13 @@ public class JwtFilter extends OncePerRequestFilter {
         UserDetails userDetails = this.userServices.loadUserByUsername(username);
 
         if (this.jwtService.isValid(token, username)) {
+//            Create a new authentications based on the user request
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//            Update the actual request
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//           Pass everything to spring to take care of all filter
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); //Tells the spring to go to other filters
     }
 }
