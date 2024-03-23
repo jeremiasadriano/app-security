@@ -28,7 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token != null) {
             token = token.substring(7);
             String username = this.jwtService.extractUsername(token);
-            if (username.isEmpty()) filterChain.doFilter(request, response);
             UserDetails userDetails = this.userDetailsServiceImpl.loadUserByUsername(username);
             if (this.jwtService.isValid(token, username)) {
 //            Create a new authentications based on the user request

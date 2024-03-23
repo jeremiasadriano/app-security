@@ -26,13 +26,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse register(PersonRegister register) {
         if (register == null || register.name().isEmpty()) throw new NullPointerException("Null values not allowed!");
         Person person = new Person(register.name(), register.email(), this.passwordEncoder.encode(register.password()), Roles.USER);
-        return new AuthenticationResponse(this.jwtService.generateToken(register.name()), new PersonResponse(this.personRepository.save(person)));
+        return new AuthenticationResponse(this.jwtService.generateToken(register.email()), new PersonResponse(this.personRepository.save(person)));
     }
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
-        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
-        Person person = this.personRepository.findPersonByEmail(request.username()).orElseThrow(NullPointerException::new);
-        return new AuthenticationResponse(this.jwtService.generateToken(request.username()), new PersonResponse(person));
+        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        Person person = this.personRepository.findPersonByEmail(request.email()).orElseThrow(NullPointerException::new);
+        return new AuthenticationResponse(this.jwtService.generateToken(request.email()), new PersonResponse(person));
     }
 }
