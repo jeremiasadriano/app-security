@@ -2,8 +2,6 @@ package com.security.app_security.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,19 +23,22 @@ public class Person implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "person_generator")
     private Long id;
-    @NotEmpty
     @Column(nullable = false)
     private String name;
-    @NotEmpty
     @Email
     @Column(nullable = false, unique = true)
     private String email;
-    @NotEmpty
-    @Size(min = 8, max = 16)
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private Roles roles;
+
+    public Person(String name, String email, String password, Roles roles) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

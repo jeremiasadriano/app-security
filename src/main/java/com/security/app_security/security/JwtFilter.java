@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.InputMismatchException;
 
 @Component
 @RequiredArgsConstructor
@@ -25,22 +24,19 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader("Authorization").substring(7);
-        if (token.isEmpty()) {
-            filterChain.doFilter(request, response); //Tells the spring security to proceed to the others filters even the conditions false.
-            return;
-        }
-        String username = this.jwtService.extractUsername(token);
-        if (username.isEmpty()) throw new InputMismatchException("User not found!");
-        UserDetails userDetails = this.userServices.loadUserByUsername(username);
-
-        if (this.jwtService.isValid(token, username)) {
+        String token = request.getHeader("Authorization");
+        if (token != null) {
+            String username = this.jwtService.extractUsername(token.substring(7));
+            if (username.isEmpty()) filterChain.doFilter(request, response);
+            UserDetails userDetails = this.userServices.loadUserByUsername(username);
+            if (this.jwtService.isValid(token, username)) {
 //            Create a new authentications based on the user request
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 //            Update the actual request
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 //           Pass everything to spring to take care of all filter
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
         }
         filterChain.doFilter(request, response); //Tells the spring to go to other filters
     }
