@@ -1,7 +1,7 @@
 package com.security.app_security.services;
 
 import com.security.app_security.models.Person;
-import com.security.app_security.models.Roles;
+import com.security.app_security.models.enums.Roles;
 import com.security.app_security.models.dto.AuthenticationRequest;
 import com.security.app_security.models.dto.AuthenticationResponse;
 import com.security.app_security.models.dto.PersonRegister;
@@ -11,6 +11,7 @@ import com.security.app_security.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
-        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        var auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        if (!auth.isAuthenticated()) throw new UsernameNotFoundException("This user isn't ours");
         Person person = this.personRepository.findPersonByEmail(request.email()).orElseThrow(NullPointerException::new);
         return new AuthenticationResponse(this.jwtService.generateToken(request.email()), new PersonResponse(person));
     }

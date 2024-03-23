@@ -15,10 +15,15 @@ public class UserAuthenticated implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return switch (this.person.getRoles()) {
-            case ADMIN ->
-                    List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_MANAGER"), new SimpleGrantedAuthority("ROLE_USER"));
-            case MANAGER ->
-                    List.of(new SimpleGrantedAuthority("ROLE_MANAGER"), new SimpleGrantedAuthority("ROLE_USER"));
+            case ADMIN -> List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_MANAGER"),
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
+            case MANAGER -> List.of(
+                    new SimpleGrantedAuthority("ROLE_MANAGER"),
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
             default -> List.of(new SimpleGrantedAuthority("ROLE_USER"));
         };
     }

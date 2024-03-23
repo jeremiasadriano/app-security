@@ -1,5 +1,6 @@
 package com.security.app_security.models;
 
+import com.security.app_security.models.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
