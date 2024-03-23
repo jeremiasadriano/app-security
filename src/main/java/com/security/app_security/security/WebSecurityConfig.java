@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-    private final UserServices userServices;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final JwtFilter filter;
 
     @Bean("security_chain")
@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
-                ).userDetailsService(userServices)
+                ).userDetailsService(userDetailsServiceImpl)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class) //Before any http request not authenticated he will use this filter(he'll get the token, validate the token, validate the user, he's roles, if he's valid or not, etc.)
                 .build();
