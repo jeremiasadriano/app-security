@@ -34,5 +34,4 @@ public class Person {
         this.password = password;
         this.roles = roles;
     }
-
 }
