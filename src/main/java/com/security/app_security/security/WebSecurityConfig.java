@@ -28,11 +28,15 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(HttpMethod.POST, "/login/**", "/register/**")
                                 .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/admin/**")
+                                .hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/manager/**")
+                                .hasRole("MANAGER")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImpl)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class) //Before any http request not authenticated he will use this filter(he'll get the token, validate the token, validate the user, he's roles, if he's valid or not, etc.)
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
