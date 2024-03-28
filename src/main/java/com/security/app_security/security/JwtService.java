@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.function.Function;
 
 
 @Component
@@ -39,13 +38,8 @@ public class JwtService {
                 .getPayload();
     }
 
-    //    Responsible for bring  one of the claims
-    public <T> T extractClaim(String token, Function<Claims, T> converter) {
-        return converter.apply(extractAllClaims(token));
-    }
-
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractAllClaims(token).getSubject();
     }
 
     public Boolean isValid(String token, String username) {
@@ -53,6 +47,6 @@ public class JwtService {
     }
 
     private Boolean isExpired(String token) {
-        return extractClaim(token, Claims::getExpiration).before(new Date());
+        return extractAllClaims(token).getExpiration().before(new Date());
     }
 }
