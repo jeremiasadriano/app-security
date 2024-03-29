@@ -10,7 +10,7 @@ public class EmailConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender
+//        mailSender
         return new JavaMailSenderImpl();
     }
 }
