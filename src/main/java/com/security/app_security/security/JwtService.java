@@ -12,6 +12,7 @@ import java.util.Date;
 
 @Component
 public class JwtService {
+    //TODO: Replace my JWT dependency with auth0
     private static final String SECRET_KEY = "5d67276d6b236e2fe0e0979ba8c4e20f206b006b9d35ada86a2772451fbc12fd";
     private static final Long EXPIRATION_TIME = 1080800000L;
 
